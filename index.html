@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <title>منصة إدارة الملفات والمذاكرة</title>
+    <style>
+        /* ضع أكواد CSS هنا */
+        body {
+            font-family: Arial, sans-serif;
+            /* ... باقي الأكواد ... */
+        }
+    </style>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>منصة إدارة الملفات والمذاكرة</title>
+</head>
+<body>
+    <h1>منصة إدارة الملفات والمذاكرة</h1>
+
+    <h2>رفع ملف PDF</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit">رفع</button>
+    </form>
+
+    <h2>الملفات المرفوعة</h2>
+    <ul>
+        {% for file in files %}
+            <li>
+                <a href="{{ url_for('download_file', filename=file.filename) }}">{{ file.filename }}</a>
+                (تاريخ الرفع: {{ file.upload_date }})
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>إضافة درس</h2>
+    <form action="/add_lesson" method="post">
+        <label for="title">عنوان الدرس:</label><br>
+        <input type="text" id="title" name="title"><br>
+        <label for="description">الوصف:</label><br>
+        <textarea id="description" name="description"></textarea><br>
+        <label for="file_id">اختر ملف:</label><br>
+        <select id="file_id" name="file_id">
+            {% for file in files %}
+                <option value="{{ file.id }}">{{ file.filename }}</option>
+            {% endfor %}
+        </select><br>
+        <button type="submit">إضافة درس</button>
+    </form>
+
+    <h2>الدروس</h2>
+    <ul>
+        {% for lesson in lessons %}
+            <li>{{ lesson.title }} - {{ lesson.description }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>إضافة مهمة</h2>
+    <form action="/add_task" method="post">
+        <label for="title">عنوان المهمة:</label><br>
+        <input type="text" id="title" name="title"><br>
+        <label for="description">الوصف:</label><br>
+        <textarea id="description" name="description"></textarea><br>
+        <label for="due_date">تاريخ الاستحقاق:</label><br>
+        <input type="date" id="due_date" name="due_date"><br>
+        <button type="submit">إضافة مهمة</button>
+    </form>
+
+    <h2>المهام</h2>
+    <ul>
+        {% for task in tasks %}
+            <li>{{ task.title }} - {{ task.description }} (تاريخ الاستحقاق: {{ task.due_date }})</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
